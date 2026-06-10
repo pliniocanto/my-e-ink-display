@@ -1,46 +1,27 @@
 import { StyleSheet, Text, View } from 'react-native';
-import type { GithubEvent } from '../../types/github';
+import type { GithubCommit } from '../../types/github';
 import { Colors, FontFamily, Spacing } from '../../constants/theme';
 import { toRelativeTime } from '../../utils/transforms';
 
-interface CommitRow { message: string; repo: string; time: string; }
-
-function extractCommits(events: GithubEvent[]): CommitRow[] {
-  const rows: CommitRow[] = [];
-  for (const event of events) {
-    if (event.type !== 'PushEvent') continue;
-    const commits = event.payload.commits ?? [];
-    for (const c of commits) {
-      rows.push({
-        message: c.message.split('\n')[0],
-        repo: event.repo.name.split('/')[1] ?? event.repo.name,
-        time: toRelativeTime(event.created_at),
-      });
-      if (rows.length === 5) return rows;
-    }
-  }
-  return rows;
-}
-
 interface Props {
-  events: GithubEvent[];
+  commits: GithubCommit[];
   style?: object;
 }
 
-export function RecentCommits({ events, style }: Props) {
-  const commits = extractCommits(events);
+export function RecentCommits({ commits, style }: Props) {
+  const shown = commits.slice(0, 5);
 
   return (
     <View style={[s.card, style]}>
       <Text style={s.label}>RECENT COMMITS</Text>
-      {commits.map((c, i) => (
+      {shown.map((c, i) => (
         <View key={i} style={s.row}>
           <Text style={s.diamond}>◆</Text>
-          <Text style={s.message} numberOfLines={1}>{c.message}</Text>
-          <Text style={s.meta}>{c.repo} · {c.time}</Text>
+          <Text style={s.message} numberOfLines={1}>{c.commit.message.split('\n')[0]}</Text>
+          <Text style={s.meta}>{c.repository.name} · {toRelativeTime(c.commit.committer.date)}</Text>
         </View>
       ))}
-      {commits.length === 0 && <Text style={s.empty}>No recent commits</Text>}
+      {shown.length === 0 && <Text style={s.empty}>No recent commits</Text>}
     </View>
   );
 }

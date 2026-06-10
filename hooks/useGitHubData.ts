@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { GithubUser, GithubEvent, GithubPR, GithubRepo, CiRunStatus } from '../types/github';
+import type { GithubUser, GithubCommit, GithubPR, GithubRepo, CiRunStatus } from '../types/github';
 import {
-  fetchUserProfile, fetchUserEvents,
+  fetchUserProfile, fetchAuthorCommits,
   fetchOpenPRs, fetchUserRepos, fetchLatestRun,
 } from '../services/github';
 import { mapRunStatus } from '../utils/transforms';
@@ -10,7 +10,7 @@ export interface CiEntry { repo: string; status: CiRunStatus; }
 
 export interface DashboardData {
   profile:     GithubUser | null;
-  events:      GithubEvent[];
+  commits:     GithubCommit[];
   openPRs:     GithubPR[];
   repos:       GithubRepo[];
   ciEntries:   CiEntry[];
@@ -26,7 +26,7 @@ export function useGitHubData(
   watchedRepos: string[],
 ): [DashboardData, () => void] {
   const [data, setData] = useState<DashboardData>({
-    profile: null, events: [], openPRs: [], repos: [],
+    profile: null, commits: [], openPRs: [], repos: [],
     ciEntries: [], totalStars: 0,
     loading: false, error: null, lastUpdated: null,
   });
@@ -37,9 +37,9 @@ export function useGitHubData(
     if (!token || !username) return;
     setData(d => ({ ...d, loading: true, error: null }));
     try {
-      const [profile, events, openPRs, repos] = await Promise.all([
+      const [profile, commits, openPRs, repos] = await Promise.all([
         fetchUserProfile(token, username),
-        fetchUserEvents(token, username),
+        fetchAuthorCommits(token, username),
         fetchOpenPRs(token, username),
         fetchUserRepos(token, username),
       ]);
@@ -59,7 +59,7 @@ export function useGitHubData(
       const totalStars = repos.reduce((sum, r) => sum + r.stargazers_count, 0);
 
       setData({
-        profile, events, openPRs, repos, ciEntries: ciRuns,
+        profile, commits, openPRs, repos, ciEntries: ciRuns,
         totalStars, loading: false, error: null, lastUpdated: new Date(),
       });
     } catch (e) {

@@ -43,4 +43,16 @@ export interface GithubSearchResult<T> {
   items: T[];
 }
 
+export interface GithubCommit {
+  sha: string;
+  commit: {
+    message: string;
+    committer: { date: string };
+  };
+  repository: {
+    name: string;
+    full_name: string;
+  };
+}
+
 export type CiRunStatus = 'PASS' | 'FAIL' | 'RUNNING' | 'SKIPPED';

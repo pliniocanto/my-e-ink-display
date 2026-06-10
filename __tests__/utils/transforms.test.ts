@@ -4,7 +4,7 @@ import {
   buildContributionMap,
   mapRunStatus,
 } from '../../utils/transforms';
-import type { GithubEvent, GithubRun } from '../../types/github';
+import type { GithubCommit, GithubRun } from '../../types/github';
 
 describe('getHeatmapIntensity', () => {
   it('returns 0 for zero commits', () => {
@@ -40,37 +40,24 @@ describe('toRelativeTime', () => {
 });
 
 describe('buildContributionMap', () => {
-  it('counts push events within the last 30 days', () => {
-    const event: GithubEvent = {
-      type: 'PushEvent',
-      repo: { name: 'user/repo' },
-      payload: { size: 3 },
-      created_at: new Date().toISOString(),
-    };
-    const map = buildContributionMap([event]);
+  const makeCommit = (date: string): GithubCommit => ({
+    sha: 'abc',
+    commit: { message: 'fix: something', committer: { date } },
+    repository: { name: 'repo', full_name: 'user/repo' },
+  });
+
+  it('counts one commit per entry', () => {
+    const map = buildContributionMap([makeCommit(new Date().toISOString())]);
     const today = new Date().toISOString().slice(0, 10);
-    expect(map.get(today)).toBe(3);
+    expect(map.get(today)).toBe(1);
   });
-  it('ignores non-push events', () => {
-    const event: GithubEvent = {
-      type: 'WatchEvent',
-      repo: { name: 'user/repo' },
-      payload: {},
-      created_at: new Date().toISOString(),
-    };
-    const map = buildContributionMap([event]);
-    expect(map.size).toBe(0);
+  it('accumulates multiple commits on the same day', () => {
+    const today = new Date().toISOString();
+    const map = buildContributionMap([makeCommit(today), makeCommit(today)]);
+    expect(map.get(today.slice(0, 10))).toBe(2);
   });
-  it('ignores events older than 30 days', () => {
-    const old = new Date(Date.now() - 31 * 24 * 60 * 60 * 1000).toISOString();
-    const event: GithubEvent = {
-      type: 'PushEvent',
-      repo: { name: 'user/repo' },
-      payload: { size: 2 },
-      created_at: old,
-    };
-    const map = buildContributionMap([event]);
-    expect(map.size).toBe(0);
+  it('returns empty map for no commits', () => {
+    expect(buildContributionMap([])).toEqual(new Map());
   });
 });
 

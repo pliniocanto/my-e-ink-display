@@ -55,7 +55,7 @@ export default function DashboardScreen() {
       />
 
       <DashboardGrid>
-        <ContributionHeatmap events={data.events} style={s.col1} />
+        <ContributionHeatmap commits={data.commits} style={s.col1} />
         <PullRequestList prs={data.openPRs} style={s.col1} />
         <RepoStats
           profile={data.profile}
@@ -64,7 +64,7 @@ export default function DashboardScreen() {
           openIssues={openIssues}
           style={s.col1}
         />
-        <RecentCommits events={data.events} style={s.col2} />
+        <RecentCommits commits={data.commits} style={s.col2} />
         <CiStatus ciEntries={data.ciEntries} style={s.col1} />
       </DashboardGrid>
 

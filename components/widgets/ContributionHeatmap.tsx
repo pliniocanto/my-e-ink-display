@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native';
-import type { GithubEvent } from '../../types/github';
+import type { GithubCommit } from '../../types/github';
 import { Colors, FontFamily, HeatmapColors, Spacing } from '../../constants/theme';
 import { buildContributionMap, getHeatmapIntensity } from '../../utils/transforms';
 
 interface Props {
-  events: GithubEvent[];
+  commits: GithubCommit[];
   style?: object;
 }
 
@@ -16,10 +16,9 @@ function getLast30Days(): string[] {
   });
 }
 
-export function ContributionHeatmap({ events, style }: Props) {
-  const map = buildContributionMap(events);
+export function ContributionHeatmap({ commits, style }: Props) {
+  const map = buildContributionMap(commits);
   const days = getLast30Days();
-  const total = [...map.values()].reduce((a, b) => a + b, 0);
 
   return (
     <View style={[s.card, style]}>
@@ -36,7 +35,7 @@ export function ContributionHeatmap({ events, style }: Props) {
           );
         })}
       </View>
-      <Text style={s.total}>{total} commits</Text>
+      <Text style={s.total}>{commits.length} commits</Text>
     </View>
   );
 }

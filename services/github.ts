@@ -1,6 +1,6 @@
 import type {
-  GithubUser, GithubEvent, GithubPR,
-  GithubRepo, GithubRun, GithubSearchResult,
+  GithubUser, GithubPR,
+  GithubRepo, GithubRun, GithubSearchResult, GithubCommit,
 } from '../types/github';
 
 const BASE = 'https://api.github.com';
@@ -21,8 +21,13 @@ export async function fetchUserProfile(token: string, username: string): Promise
   return request<GithubUser>(`${BASE}/users/${username}`, token);
 }
 
-export async function fetchUserEvents(token: string, username: string): Promise<GithubEvent[]> {
-  return request<GithubEvent[]>(`${BASE}/users/${username}/events?per_page=100`, token);
+export async function fetchAuthorCommits(token: string, username: string): Promise<GithubCommit[]> {
+  const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const result = await request<GithubSearchResult<GithubCommit>>(
+    `${BASE}/search/commits?q=author:${username}+committer-date:>${since}&sort=committer-date&order=desc&per_page=100`,
+    token,
+  );
+  return result.items;
 }
 
 export async function fetchOpenPRs(token: string, username: string): Promise<GithubPR[]> {
