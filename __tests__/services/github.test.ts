@@ -3,8 +3,7 @@ global.fetch = mockFetch;
 
 import {
   fetchUserProfile,
-  fetchUserEvents,
-  fetchOpenPRs,
+  fetchRepoPRs,
   fetchUserRepos,
   fetchLatestRun,
 } from '../../services/github';
@@ -40,12 +39,17 @@ describe('fetchUserProfile', () => {
   });
 });
 
-describe('fetchOpenPRs', () => {
-  it('returns items from search result', async () => {
-    mockOk({ total_count: 1, items: [{ number: 42, title: 'fix: bug', draft: false }] });
-    const prs = await fetchOpenPRs(TOKEN, USER);
+describe('fetchRepoPRs', () => {
+  it('returns open PRs with branch info', async () => {
+    mockOk([{ number: 42, title: 'fix: bug', draft: false, head: { ref: 'feat/x', repo: { full_name: 'user/repo' } }, base: { ref: 'main' }, user: { login: 'user' } }]);
+    const prs = await fetchRepoPRs(TOKEN, 'user', 'repo');
     expect(prs).toHaveLength(1);
-    expect(prs[0].number).toBe(42);
+    expect(prs[0].head.ref).toBe('feat/x');
+  });
+  it('returns empty array on error', async () => {
+    mockError(404);
+    const prs = await fetchRepoPRs(TOKEN, 'user', 'repo');
+    expect(prs).toEqual([]);
   });
 });
 

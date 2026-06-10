@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type { GithubUser, GithubCommit, GithubPR, GithubRepo, CiRunStatus } from '../types/github';
 import {
   fetchUserProfile, fetchAuthorCommits,
-  fetchOpenPRs, fetchUserRepos, fetchLatestRun, fetchRepoBranches,
+  fetchRepoPRs, fetchUserRepos, fetchLatestRun, fetchRepoBranches,
 } from '../services/github';
 import { mapRunStatus } from '../utils/transforms';
 
@@ -39,10 +39,9 @@ export function useGitHubData(
     if (!token || !username) return;
     setData(d => ({ ...d, loading: true, error: null }));
     try {
-      const [profile, commits, openPRs, repos] = await Promise.all([
+      const [profile, commits, repos] = await Promise.all([
         fetchUserProfile(token, username),
         fetchAuthorCommits(token, username),
-        fetchOpenPRs(token, username),
         fetchUserRepos(token, username),
       ]);
 
@@ -50,7 +49,7 @@ export function useGitHubData(
         ? watchedReposKey.split(',')
         : repos.slice(0, 5).map(r => r.full_name);
 
-      const [ciRuns, branchEntries] = await Promise.all([
+      const [ciRuns, branchEntries, prsByRepo] = await Promise.all([
         Promise.all(
           reposToWatch.map(async (full) => {
             const [owner, repo] = full.split('/');
@@ -65,7 +64,15 @@ export function useGitHubData(
             return { repo: full, branches };
           }),
         ),
+        Promise.all(
+          reposToWatch.map(async (full) => {
+            const [owner, repo] = full.split('/');
+            return fetchRepoPRs(token, owner, repo);
+          }),
+        ),
       ]);
+
+      const openPRs = prsByRepo.flat();
 
       const totalStars = repos.reduce((sum, r) => sum + r.stargazers_count, 0);
 

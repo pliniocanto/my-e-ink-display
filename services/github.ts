@@ -3,6 +3,7 @@ import type {
   GithubRepo, GithubRun, GithubSearchResult, GithubCommit, GithubBranch,
 } from '../types/github';
 
+
 const BASE = 'https://api.github.com';
 
 async function request<T>(url: string, token: string): Promise<T> {
@@ -30,12 +31,15 @@ export async function fetchAuthorCommits(token: string, username: string): Promi
   return result.items;
 }
 
-export async function fetchOpenPRs(token: string, username: string): Promise<GithubPR[]> {
-  const result = await request<GithubSearchResult<GithubPR>>(
-    `${BASE}/search/issues?q=is:pr+author:${username}+is:open&per_page=10`,
-    token,
-  );
-  return result.items;
+export async function fetchRepoPRs(token: string, owner: string, repo: string): Promise<GithubPR[]> {
+  try {
+    return await request<GithubPR[]>(
+      `${BASE}/repos/${owner}/${repo}/pulls?state=open&per_page=30`,
+      token,
+    );
+  } catch {
+    return [];
+  }
 }
 
 export async function fetchUserRepos(token: string, username: string): Promise<GithubRepo[]> {

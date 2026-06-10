@@ -22,6 +22,9 @@ export interface GithubPR {
   title: string;
   draft: boolean;
   html_url: string;
+  head: { ref: string; repo: { full_name: string } | null };
+  base: { ref: string };
+  user: { login: string };
 }
 
 export interface GithubRepo {
