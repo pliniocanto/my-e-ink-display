@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type { GithubUser, GithubCommit, GithubPR, GithubRepo, CiRunStatus } from '../types/github';
 import {
   fetchUserProfile, fetchAuthorCommits,
-  fetchRepoPRs, fetchUserRepos, fetchLatestRun, fetchRepoBranches,
+  fetchRepoPRs, fetchUserRepos, fetchLatestRun, fetchRepoBranches, fetchBranchCommits,
 } from '../services/github';
 import { mapRunStatus } from '../utils/transforms';
 
@@ -74,10 +74,24 @@ export function useGitHubData(
 
       const openPRs = prsByRepo.flat();
 
+      // Fetch commits from every branch of every watched repo (catches private repos + co-authored)
+      const branchCommitArrays = await Promise.all(
+        branchEntries.flatMap(({ repo: full, branches }) => {
+          const [owner, repo] = full.split('/');
+          return branches.map(b => fetchBranchCommits(token, owner, repo, b.name, username));
+        }),
+      );
+
+      // Merge search commits + branch commits, deduplicate by SHA, sort newest first
+      const seen = new Set<string>();
+      const allCommits = [...commits, ...branchCommitArrays.flat()]
+        .filter(c => { if (seen.has(c.sha)) return false; seen.add(c.sha); return true; })
+        .sort((a, b) => b.commit.committer.date.localeCompare(a.commit.committer.date));
+
       const totalStars = repos.reduce((sum, r) => sum + r.stargazers_count, 0);
 
       setData({
-        profile, commits, openPRs, repos, ciEntries: ciRuns,
+        profile, commits: allCommits, openPRs, repos, ciEntries: ciRuns,
         branchEntries, totalStars, loading: false, error: null, lastUpdated: new Date(),
       });
     } catch (e) {

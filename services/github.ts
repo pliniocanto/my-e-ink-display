@@ -46,6 +46,33 @@ export async function fetchUserRepos(token: string, username: string): Promise<G
   return request<GithubRepo[]>(`${BASE}/users/${username}/repos?per_page=100&sort=updated`, token);
 }
 
+interface RawRepoCommit {
+  sha: string;
+  commit: { message: string; committer: { date: string } };
+  author:    { login: string } | null;
+  committer: { login: string } | null;
+}
+
+export async function fetchBranchCommits(
+  token: string, owner: string, repo: string, branch: string, username: string,
+): Promise<GithubCommit[]> {
+  try {
+    const raw = await request<RawRepoCommit[]>(
+      `${BASE}/repos/${owner}/${repo}/commits?sha=${encodeURIComponent(branch)}&per_page=30`,
+      token,
+    );
+    return raw
+      .filter(c => c.author?.login === username || c.committer?.login === username)
+      .map(c => ({
+        sha: c.sha,
+        commit: { message: c.commit.message, committer: { date: c.commit.committer.date } },
+        repository: { name: repo, full_name: `${owner}/${repo}` },
+      }));
+  } catch {
+    return [];
+  }
+}
+
 export async function fetchRepoBranches(
   token: string, owner: string, repo: string,
 ): Promise<GithubBranch[]> {
