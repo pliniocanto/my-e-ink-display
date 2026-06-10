@@ -23,6 +23,9 @@ export function TopBar({ username, lastUpdated, onRefresh, onSettingsPress }: Pr
         <Pressable onPress={onRefresh} style={s.refreshBtn}>
           <Text style={s.refreshText}>↻</Text>
         </Pressable>
+        <Pressable onPress={onSettingsPress} style={s.settingsBtn}>
+          <Text style={s.settingsText}>⚙ CONFIG</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -41,6 +44,8 @@ const s = StyleSheet.create({
   title: { fontFamily: FontFamily, fontSize: 18, fontWeight: 'bold', letterSpacing: 2, color: Colors.ink },
   right:  { flexDirection: 'row', alignItems: 'center', gap: 12 },
   meta:   { fontFamily: FontFamily, fontSize: 11, color: Colors.gray1 },
-  refreshBtn: { padding: 4 },
-  refreshText: { fontFamily: FontFamily, fontSize: 16, color: Colors.ink },
+  refreshBtn:   { padding: 4 },
+  refreshText:  { fontFamily: FontFamily, fontSize: 16, color: Colors.ink },
+  settingsBtn:  { borderWidth: 1, borderColor: Colors.ink, paddingHorizontal: 8, paddingVertical: 3 },
+  settingsText: { fontFamily: FontFamily, fontSize: 11, letterSpacing: 1, color: Colors.ink },
 });
