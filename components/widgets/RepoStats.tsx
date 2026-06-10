@@ -12,13 +12,16 @@ interface Props {
 }
 
 function Counter({ value, label, onPress }: { value: number; label: string; onPress?: () => void }) {
-  const inner = (
-    <View style={[s.counter, onPress ? s.tappable : null]}>
+  const style = [s.counter, onPress ? s.tappable : null];
+  const content = (
+    <>
       <Text style={s.value}>{value}</Text>
       <Text style={s.counterLabel}>{label}{onPress ? ' ↗' : ''}</Text>
-    </View>
+    </>
   );
-  return onPress ? <Pressable onPress={onPress}>{inner}</Pressable> : inner;
+  return onPress
+    ? <Pressable onPress={onPress} style={style}>{content}</Pressable>
+    : <View style={style}>{content}</View>;
 }
 
 export function RepoStats({ profile, totalStars, totalForks, openIssues, style }: Props) {
