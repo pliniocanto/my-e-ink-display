@@ -63,6 +63,17 @@ export interface GithubCommit {
   };
 }
 
+export interface GithubIssue {
+  number: number;
+  title: string;
+  state: string;
+  created_at: string;
+  updated_at: string;
+  repository_url: string;
+  labels: Array<{ name: string }>;
+  comments: number;
+}
+
 export interface GithubBranch {
   name: string;
   protected: boolean;

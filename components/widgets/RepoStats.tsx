@@ -36,7 +36,11 @@ export function RepoStats({ profile, totalStars, totalForks, openIssues, style }
           label="REPOS"
           onPress={() => router.push('/repos')}
         />
-        <Counter value={openIssues} label="ISSUES" />
+        <Counter
+          value={openIssues}
+          label="ISSUES"
+          onPress={() => router.push('/issues')}
+        />
         <Counter value={totalStars} label="STARS" />
         <Counter value={totalForks} label="FORKS" />
       </View>

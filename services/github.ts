@@ -1,6 +1,6 @@
 import type {
   GithubUser, GithubPR,
-  GithubRepo, GithubRun, GithubSearchResult, GithubCommit, GithubBranch,
+  GithubRepo, GithubRun, GithubSearchResult, GithubCommit, GithubBranch, GithubIssue,
 } from '../types/github';
 
 
@@ -40,6 +40,14 @@ export async function fetchRepoPRs(token: string, owner: string, repo: string): 
   } catch {
     return [];
   }
+}
+
+export async function fetchUserIssues(token: string, username: string): Promise<GithubIssue[]> {
+  const result = await request<GithubSearchResult<GithubIssue>>(
+    `${BASE}/search/issues?q=is:issue+author:${username}+is:open&sort=updated&per_page=50`,
+    token,
+  );
+  return result.items;
 }
 
 export async function fetchUserRepos(token: string, username: string): Promise<GithubRepo[]> {
