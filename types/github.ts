@@ -30,9 +30,14 @@ export interface GithubPR {
 export interface GithubRepo {
   name: string;
   full_name: string;
+  description: string | null;
+  language: string | null;
   stargazers_count: number;
   forks_count: number;
   open_issues_count: number;
+  pushed_at: string;
+  private: boolean;
+  fork: boolean;
 }
 
 export interface GithubRun {
