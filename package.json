@@ -4,6 +4,7 @@
   "main": "expo-router/entry",
   "dependencies": {
     "@expo-google-fonts/space-mono": "^0.4.2",
+    "babel-preset-expo": "~56.0.0",
     "expo": "~56.0.9",
     "expo-constants": "~56.0.17",
     "expo-font": "~56.0.5",
