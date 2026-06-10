@@ -1,5 +1,5 @@
 export const lightColors = {
-  paper: '#f5f0e8',
+  paper: '#eeedec',
   card:  '#ffffff',
   ink:   '#1a1a1a',
   gray1: '#888888',

@@ -74,6 +74,28 @@ export interface GithubIssue {
   comments: number;
 }
 
+export interface GithubCommitFile {
+  filename: string;
+  status: string;
+  additions: number;
+  deletions: number;
+  changes: number;
+  patch?: string;
+}
+
+export interface GithubCommitDetail {
+  sha: string;
+  commit: {
+    message: string;
+    author:    { name: string; email: string; date: string };
+    committer: { name: string; email: string; date: string };
+  };
+  author:    { login: string } | null;
+  committer: { login: string } | null;
+  stats: { additions: number; deletions: number; total: number };
+  files: GithubCommitFile[];
+}
+
 export interface GithubBranch {
   name: string;
   protected: boolean;

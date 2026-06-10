@@ -1,6 +1,7 @@
 import type {
   GithubUser, GithubPR,
   GithubRepo, GithubRun, GithubSearchResult, GithubCommit, GithubBranch, GithubIssue,
+  GithubCommitDetail,
 } from '../types/github';
 
 
@@ -40,6 +41,12 @@ export async function fetchRepoPRs(token: string, owner: string, repo: string): 
   } catch {
     return [];
   }
+}
+
+export async function fetchCommitDetail(
+  token: string, owner: string, repo: string, sha: string,
+): Promise<GithubCommitDetail> {
+  return request<GithubCommitDetail>(`${BASE}/repos/${owner}/${repo}/commits/${sha}`, token);
 }
 
 export async function fetchUserIssues(token: string): Promise<GithubIssue[]> {

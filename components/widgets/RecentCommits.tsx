@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
 import type { GithubCommit } from '../../types/github';
 import { FontFamily, Spacing } from '../../constants/theme';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -11,17 +12,22 @@ interface Props {
 
 export function RecentCommits({ commits, style }: Props) {
   const { colors } = useTheme();
+  const router = useRouter();
   const shown = commits.slice(0, 10);
 
   return (
     <View style={[s.card, { borderColor: colors.gray2, backgroundColor: colors.card }, style]}>
       <Text style={[s.label, { color: colors.gray1 }]}>RECENT COMMITS</Text>
       {shown.map((c, i) => (
-        <View key={i} style={[s.row, { borderBottomColor: colors.gray3 }]}>
+        <Pressable
+          key={i}
+          style={[s.row, { borderBottomColor: colors.gray3 }]}
+          onPress={() => router.push(`/commit/${c.sha}?repo=${encodeURIComponent(c.repository.full_name)}`)}
+        >
           <Text style={[s.diamond, { color: colors.ink }]}>◆</Text>
           <Text style={[s.message, { color: colors.ink }]} numberOfLines={1}>{c.commit.message.split('\n')[0]}</Text>
           <Text style={[s.meta, { color: colors.gray1 }]}>{c.repository.name} · {toRelativeTime(c.commit.committer.date)}</Text>
-        </View>
+        </Pressable>
       ))}
       {shown.length === 0 && <Text style={[s.empty, { color: colors.gray2 }]}>No recent commits</Text>}
     </View>
