@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FlatList, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { getToken, getUsername } from '../services/storage';
+import { getToken } from '../services/storage';
 import { fetchUserIssues } from '../services/github';
 import type { GithubIssue } from '../types/github';
 import { toRelativeTime } from '../utils/transforms';
@@ -20,9 +20,9 @@ export default function IssuesScreen() {
   useEffect(() => {
     (async () => {
       try {
-        const [token, username] = await Promise.all([getToken(), getUsername()]);
-        if (!token || !username) throw new Error('Not configured');
-        const data = await fetchUserIssues(token, username);
+        const token = await getToken();
+        if (!token) throw new Error('Not configured');
+        const data = await fetchUserIssues(token);
         setIssues(data);
       } catch (e) {
         setError(e instanceof Error ? e.message : 'Failed to load issues');

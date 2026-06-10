@@ -42,12 +42,11 @@ export async function fetchRepoPRs(token: string, owner: string, repo: string): 
   }
 }
 
-export async function fetchUserIssues(token: string, username: string): Promise<GithubIssue[]> {
-  const result = await request<GithubSearchResult<GithubIssue>>(
-    `${BASE}/search/issues?q=is:issue+author:${username}+is:open&sort=updated&per_page=50`,
+export async function fetchUserIssues(token: string): Promise<GithubIssue[]> {
+  return request<GithubIssue[]>(
+    `${BASE}/issues?filter=created&state=open&sort=updated&per_page=50`,
     token,
   );
-  return result.items;
 }
 
 export async function fetchUserRepos(token: string, username: string): Promise<GithubRepo[]> {
