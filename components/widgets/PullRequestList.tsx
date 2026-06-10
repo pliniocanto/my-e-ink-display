@@ -1,0 +1,42 @@
+import { StyleSheet, Text, View } from 'react-native';
+import type { GithubPR } from '../../types/github';
+import { Colors, FontFamily, Spacing } from '../../constants/theme';
+
+interface Props {
+  prs: GithubPR[];
+  style?: object;
+}
+
+export function PullRequestList({ prs, style }: Props) {
+  const open  = prs.filter(p => !p.draft);
+  const draft = prs.filter(p => p.draft);
+  const shown = prs.slice(0, 4);
+
+  return (
+    <View style={[s.card, style]}>
+      <Text style={s.label}>PULL REQUESTS</Text>
+      {shown.map(pr => (
+        <View key={pr.number} style={s.row}>
+          <Text style={s.bullet}>{pr.draft ? '○' : '●'}</Text>
+          <Text style={s.title} numberOfLines={1}>
+            {pr.title}
+          </Text>
+          <Text style={s.number}>#{pr.number}</Text>
+        </View>
+      ))}
+      {shown.length === 0 && <Text style={s.empty}>No open PRs</Text>}
+      <Text style={s.summary}>{open.length} open · {draft.length} draft</Text>
+    </View>
+  );
+}
+
+const s = StyleSheet.create({
+  card:    { flex: 1, borderWidth: 1, borderColor: Colors.gray2, padding: Spacing.inner, backgroundColor: '#fff' },
+  label:   { fontFamily: FontFamily, fontSize: 11, letterSpacing: 1, color: Colors.gray1, marginBottom: 6 },
+  row:     { flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: Colors.gray3, paddingVertical: 4, gap: 6 },
+  bullet:  { fontFamily: FontFamily, fontSize: 12, color: Colors.ink, width: 12 },
+  title:   { fontFamily: FontFamily, fontSize: 12, color: Colors.ink, flex: 1 },
+  number:  { fontFamily: FontFamily, fontSize: 12, color: Colors.gray1 },
+  empty:   { fontFamily: FontFamily, fontSize: 12, color: Colors.gray2, paddingVertical: 4 },
+  summary: { fontFamily: FontFamily, fontSize: 11, color: Colors.gray1, marginTop: 8 },
+});
