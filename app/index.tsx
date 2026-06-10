@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { useGitHubData } from '../hooks/useGitHubData';
 import { useCountdown } from '../hooks/useCountdown';
 import { startPoller, POLL_SECONDS } from '../services/poller';
 import { getToken, getUsername, getWatchedRepos } from '../services/storage';
 import { TopBar } from '../components/layout/TopBar';
 import { BottomBar } from '../components/layout/BottomBar';
-import { DashboardGrid } from '../components/layout/DashboardGrid';
 import { ContributionHeatmap } from '../components/widgets/ContributionHeatmap';
 import { PullRequestList } from '../components/widgets/PullRequestList';
 import { RepoStats } from '../components/widgets/RepoStats';
@@ -54,19 +53,25 @@ export default function DashboardScreen() {
         onSettingsPress={() => setSettingsOpen(true)}
       />
 
-      <DashboardGrid>
-        <ContributionHeatmap commits={data.commits} style={s.col1} />
-        <PullRequestList prs={data.openPRs} style={s.col1} />
-        <RepoStats
-          profile={data.profile}
-          totalStars={data.totalStars}
-          totalForks={totalForks}
-          openIssues={openIssues}
-          style={s.col1}
-        />
-        <RecentCommits commits={data.commits} style={s.col2} />
-        <CiStatus ciEntries={data.ciEntries} style={s.col1} />
-      </DashboardGrid>
+      <View style={s.grid}>
+        {/* Top row: compact widgets */}
+        <View style={s.row}>
+          <ContributionHeatmap commits={data.commits} style={s.col1} />
+          <RepoStats
+            profile={data.profile}
+            totalStars={data.totalStars}
+            totalForks={totalForks}
+            openIssues={openIssues}
+            style={s.col1}
+          />
+          <CiStatus ciEntries={data.ciEntries} style={s.col1} />
+        </View>
+        {/* Bottom row: wide text widgets */}
+        <View style={s.row}>
+          <PullRequestList prs={data.openPRs} style={s.col1} />
+          <RecentCommits commits={data.commits} style={s.col2} />
+        </View>
+      </View>
 
       <BottomBar error={data.error} countdown={countdown} />
 
@@ -91,6 +96,8 @@ export default function DashboardScreen() {
 
 const s = StyleSheet.create({
   screen: { flex: 1, backgroundColor: Colors.paper, padding: Spacing.screen },
+  grid:   { flex: 1, flexDirection: 'column', gap: Spacing.gap },
+  row:    { flex: 1, flexDirection: 'row', gap: Spacing.gap },
   col1:   { flex: 1 },
   col2:   { flex: 2 },
 });
