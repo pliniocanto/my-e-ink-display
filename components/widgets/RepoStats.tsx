@@ -1,7 +1,8 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import type { GithubUser } from '../../types/github';
-import { Colors, FontFamily, Spacing } from '../../constants/theme';
+import { FontFamily, Spacing } from '../../constants/theme';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface Props {
   profile: GithubUser | null;
@@ -11,12 +12,15 @@ interface Props {
   style?: object;
 }
 
-function Counter({ value, label, onPress }: { value: number; label: string; onPress?: () => void }) {
-  const style = [s.counter, onPress ? s.tappable : null];
+function Counter({ value, label, onPress, colors }: {
+  value: number; label: string; onPress?: () => void;
+  colors: { ink: string; gray1: string; gray2: string; gray3: string };
+}) {
+  const style = [s.counter, { borderColor: onPress ? colors.ink : colors.gray3 }];
   const content = (
     <>
-      <Text style={s.value}>{value}</Text>
-      <Text style={s.counterLabel}>{label}{onPress ? ' ↗' : ''}</Text>
+      <Text style={[s.value, { color: colors.ink }]}>{value}</Text>
+      <Text style={[s.counterLabel, { color: colors.gray1 }]}>{label}{onPress ? ' ↗' : ''}</Text>
     </>
   );
   return onPress
@@ -25,35 +29,27 @@ function Counter({ value, label, onPress }: { value: number; label: string; onPr
 }
 
 export function RepoStats({ profile, totalStars, totalForks, openIssues, style }: Props) {
+  const { colors } = useTheme();
   const router = useRouter();
 
   return (
-    <View style={[s.card, style]}>
-      <Text style={s.label}>REPO STATS</Text>
+    <View style={[s.card, { borderColor: colors.gray2, backgroundColor: colors.card }, style]}>
+      <Text style={[s.label, { color: colors.gray1 }]}>REPO STATS</Text>
       <View style={s.grid}>
-        <Counter
-          value={profile?.public_repos ?? 0}
-          label="REPOS"
-          onPress={() => router.push('/repos')}
-        />
-        <Counter
-          value={openIssues}
-          label="ISSUES"
-          onPress={() => router.push('/issues')}
-        />
-        <Counter value={totalStars} label="STARS" />
-        <Counter value={totalForks} label="FORKS" />
+        <Counter value={profile?.public_repos ?? 0} label="REPOS"   colors={colors} onPress={() => router.push('/repos')} />
+        <Counter value={openIssues}                  label="ISSUES"  colors={colors} onPress={() => router.push('/issues')} />
+        <Counter value={totalStars}                  label="STARS"   colors={colors} />
+        <Counter value={totalForks}                  label="FORKS"   colors={colors} />
       </View>
     </View>
   );
 }
 
 const s = StyleSheet.create({
-  card:         { flex: 1, borderWidth: 1, borderColor: Colors.gray2, padding: Spacing.inner, backgroundColor: '#fff' },
-  label:        { fontFamily: FontFamily, fontSize: 11, letterSpacing: 1, color: Colors.gray1, marginBottom: 6 },
+  card:         { flex: 1, borderWidth: 1, padding: Spacing.inner },
+  label:        { fontFamily: FontFamily, fontSize: 11, letterSpacing: 1, marginBottom: 6 },
   grid:         { flexDirection: 'row', flexWrap: 'wrap', gap: 6, flex: 1 },
-  counter:      { width: '48%', borderWidth: 1, borderColor: Colors.gray3, padding: 6, alignItems: 'center' },
-  tappable:     { borderColor: Colors.ink },
-  value:        { fontFamily: FontFamily, fontSize: 22, fontWeight: 'bold', color: Colors.ink },
-  counterLabel: { fontFamily: FontFamily, fontSize: 10, color: Colors.gray1 },
+  counter:      { width: '48%', borderWidth: 1, padding: 6, alignItems: 'center' },
+  value:        { fontFamily: FontFamily, fontSize: 22, fontWeight: 'bold' },
+  counterLabel: { fontFamily: FontFamily, fontSize: 10 },
 });

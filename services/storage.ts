@@ -4,6 +4,7 @@ const KEYS = {
   token:        'github_token',
   username:     'github_username',
   watchedRepos: 'watched_repos',
+  theme:        'app_theme',
 } as const;
 
 export async function getToken(): Promise<string | null> {
@@ -25,4 +26,11 @@ export async function getWatchedRepos(): Promise<string[]> {
 }
 export async function setWatchedRepos(repos: string[]): Promise<void> {
   await SecureStore.setItemAsync(KEYS.watchedRepos, JSON.stringify(repos));
+}
+export async function getTheme(): Promise<'light' | 'dark'> {
+  const v = await SecureStore.getItemAsync(KEYS.theme);
+  return v === 'dark' ? 'dark' : 'light';
+}
+export async function saveTheme(theme: 'light' | 'dark'): Promise<void> {
+  await SecureStore.setItemAsync(KEYS.theme, theme);
 }

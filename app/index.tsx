@@ -13,9 +13,11 @@ import { RecentCommits } from '../components/widgets/RecentCommits';
 import { CiStatus } from '../components/widgets/CiStatus';
 import { BranchList } from '../components/widgets/BranchList';
 import { SettingsModal } from '../components/settings/SettingsModal';
-import { Colors, Spacing } from '../constants/theme';
+import { Spacing } from '../constants/theme';
+import { useTheme } from '../contexts/ThemeContext';
 
 export default function DashboardScreen() {
+  const { colors } = useTheme();
   const [token, setTokenState]               = useState('');
   const [username, setUsernameState]         = useState('');
   const [watchedRepos, setWatchedReposState] = useState<string[]>([]);
@@ -46,7 +48,7 @@ export default function DashboardScreen() {
   const openIssues  = data.repos.reduce((s, r) => s + r.open_issues_count, 0);
 
   return (
-    <SafeAreaView style={s.screen}>
+    <SafeAreaView style={[s.screen, { backgroundColor: colors.paper }]}>
       <TopBar
         username={username || '—'}
         lastUpdated={data.lastUpdated}
@@ -97,7 +99,7 @@ export default function DashboardScreen() {
 }
 
 const s = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: Colors.paper, padding: Spacing.screen },
+  screen: { flex: 1, padding: Spacing.screen },
   grid:   { flex: 1, flexDirection: 'column', gap: Spacing.gap },
   row:    { flex: 1, flexDirection: 'row', gap: Spacing.gap },
   col1:   { flex: 1 },
