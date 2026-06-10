@@ -3,6 +3,7 @@ export interface GithubUser {
   public_repos: number;
   followers: number;
   following: number;
+  avatar_url: string;
 }
 
 export interface GithubEventPayload {

@@ -51,6 +51,7 @@ export default function DashboardScreen() {
     <SafeAreaView style={[s.screen, { backgroundColor: colors.paper }]}>
       <TopBar
         username={username || '—'}
+        avatarUrl={data.profile?.avatar_url}
         lastUpdated={data.lastUpdated}
         onRefresh={refresh}
         onSettingsPress={() => setSettingsOpen(true)}
