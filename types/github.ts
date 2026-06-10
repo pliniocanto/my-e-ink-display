@@ -55,4 +55,9 @@ export interface GithubCommit {
   };
 }
 
+export interface GithubBranch {
+  name: string;
+  protected: boolean;
+}
+
 export type CiRunStatus = 'PASS' | 'FAIL' | 'RUNNING' | 'SKIPPED';

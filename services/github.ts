@@ -1,6 +1,6 @@
 import type {
   GithubUser, GithubPR,
-  GithubRepo, GithubRun, GithubSearchResult, GithubCommit,
+  GithubRepo, GithubRun, GithubSearchResult, GithubCommit, GithubBranch,
 } from '../types/github';
 
 const BASE = 'https://api.github.com';
@@ -40,6 +40,19 @@ export async function fetchOpenPRs(token: string, username: string): Promise<Git
 
 export async function fetchUserRepos(token: string, username: string): Promise<GithubRepo[]> {
   return request<GithubRepo[]>(`${BASE}/users/${username}/repos?per_page=100&sort=updated`, token);
+}
+
+export async function fetchRepoBranches(
+  token: string, owner: string, repo: string,
+): Promise<GithubBranch[]> {
+  try {
+    return request<GithubBranch[]>(
+      `${BASE}/repos/${owner}/${repo}/branches?per_page=30`,
+      token,
+    );
+  } catch {
+    return [];
+  }
 }
 
 export async function fetchLatestRun(

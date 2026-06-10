@@ -11,6 +11,7 @@ import { PullRequestList } from '../components/widgets/PullRequestList';
 import { RepoStats } from '../components/widgets/RepoStats';
 import { RecentCommits } from '../components/widgets/RecentCommits';
 import { CiStatus } from '../components/widgets/CiStatus';
+import { BranchList } from '../components/widgets/BranchList';
 import { SettingsModal } from '../components/settings/SettingsModal';
 import { Colors, Spacing } from '../constants/theme';
 
@@ -64,6 +65,7 @@ export default function DashboardScreen() {
             openIssues={openIssues}
             style={s.col1}
           />
+          <BranchList branchEntries={data.branchEntries} style={s.col1} />
           <CiStatus ciEntries={data.ciEntries} style={s.col1} />
         </View>
         {/* Bottom row: wide text widgets */}
