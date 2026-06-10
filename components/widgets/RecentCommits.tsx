@@ -11,7 +11,7 @@ interface Props {
 
 export function RecentCommits({ commits, style }: Props) {
   const { colors } = useTheme();
-  const shown = commits.slice(0, 15);
+  const shown = commits.slice(0, 10);
 
   return (
     <View style={[s.card, { borderColor: colors.gray2, backgroundColor: colors.card }, style]}>
