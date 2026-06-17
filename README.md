@@ -23,7 +23,12 @@ The aesthetic is intentional: **grayscale palette, monospaced font, sharp border
 
 ## Features
 
+Light theme
 <img width="1275" height="796" alt="image" src="https://github.com/user-attachments/assets/1a1569c9-c542-4da4-8bec-4365fa9b41df" />
+
+Dark theme
+<img width="1269" height="793" alt="image" src="https://github.com/user-attachments/assets/02112996-ad5a-4c23-8b3f-514c2400f0f1" />
+
 
 ### Widgets
 
