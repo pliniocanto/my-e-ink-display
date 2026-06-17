@@ -23,9 +23,7 @@ The aesthetic is intentional: **grayscale palette, monospaced font, sharp border
 
 ## Features
 
-```
 <img width="1275" height="796" alt="image" src="https://github.com/user-attachments/assets/1a1569c9-c542-4da4-8bec-4365fa9b41df" />
-```
 
 ### Widgets
 
