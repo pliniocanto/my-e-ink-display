@@ -24,24 +24,7 @@ The aesthetic is intentional: **grayscale palette, monospaced font, sharp border
 ## Features
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│  ▣ GITHUB DASHBOARD          @youruser | updated 11:36 PM  ↻ ⚙ CONFIG │
-├──────────────┬───────────────┬────────────────────┬──────────────────┤
-│ CONTRIBUTIONS│  REPO STATS   │     BRANCHES       │    CI / CD       │
-│ LAST 30 DAYS │               │                    │                  │
-│ ░░▓▓░░▓░░▒▒  │ 27↗   19↗    │ servidor           │ ▣ servidor  PASS │
-│ ░▒░░▓▓░░▒░░  │ REPOS  ISSUES│  ⌥ develop         │ ▣ painel    PASS │
-│ ▒░░▓▓░░░▒░░  │               │  ⌥ main            │ ▣ helper  SKIP  │
-│ 129 commits  │  312    47    │ painel             │                  │
-│              │ STARS  FORKS  │  ⌥ feat/login      │                  │
-├──────────────┴───────────────┴────────────────────┴──────────────────┤
-│ PULL REQUESTS              │  RECENT COMMITS                          │
-│ ● feat: painel v2  #2      │  ◆ docs: alinha README     painel · 12h │
-│   feature/v2 → main        │  ◆ refactor: migra para Vite painel · 12h│
-│ ○ fix: login draft #5      │  ◆ chore: atualiza stack   painel · 13h │
-│   fix/auth → develop       │  ◆ fix: resolve audit vulns srv · 14h   │
-│ 1 open · 1 draft           │  ◆ chore: consolidate env  srv · 14h    │
-└────────────────────────────┴──────────────────────────────────────────┘
+<img width="1275" height="796" alt="image" src="https://github.com/user-attachments/assets/1a1569c9-c542-4da4-8bec-4365fa9b41df" />
 ```
 
 ### Widgets
