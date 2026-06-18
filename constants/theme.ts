@@ -45,3 +45,10 @@ export const Spacing = {
   gap:    12,
   inner:  10,
 } as const;
+
+/** Prevents flex children from overflowing their column on dense dashboards. */
+export const widgetCard = {
+  overflow: 'hidden' as const,
+  minWidth: 0,
+  minHeight: 0,
+};

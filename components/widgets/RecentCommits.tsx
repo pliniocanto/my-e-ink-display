@@ -1,7 +1,7 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import type { GithubCommit } from '../../types/github';
-import { FontFamily, Spacing } from '../../constants/theme';
+import { FontFamily, Spacing, widgetCard } from '../../constants/theme';
 import { useTheme } from '../../contexts/ThemeContext';
 import { toRelativeTime } from '../../utils/transforms';
 
@@ -16,8 +16,9 @@ export function RecentCommits({ commits, style }: Props) {
   const shown = commits.slice(0, 10);
 
   return (
-    <View style={[s.card, { borderColor: colors.gray2, backgroundColor: colors.card }, style]}>
+    <View style={[s.card, widgetCard, { borderColor: colors.gray2, backgroundColor: colors.card }, style]}>
       <Text style={[s.label, { color: colors.gray1 }]}>RECENT COMMITS</Text>
+      <ScrollView style={s.list} showsVerticalScrollIndicator={false}>
       {shown.map((c, i) => (
         <Pressable
           key={i}
@@ -30,12 +31,14 @@ export function RecentCommits({ commits, style }: Props) {
         </Pressable>
       ))}
       {shown.length === 0 && <Text style={[s.empty, { color: colors.gray2 }]}>No recent commits</Text>}
+      </ScrollView>
     </View>
   );
 }
 
 const s = StyleSheet.create({
   card:    { flex: 2, borderWidth: 1, padding: Spacing.inner },
+  list:    { flex: 1 },
   label:   { fontFamily: FontFamily, fontSize: 11, letterSpacing: 1, marginBottom: 6 },
   row:     { flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, paddingVertical: 4, gap: 6 },
   diamond: { fontFamily: FontFamily, fontSize: 10, width: 12 },

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useGitHubData } from '../hooks/useGitHubData';
 import { useCountdown } from '../hooks/useCountdown';
 import { startPoller, POLL_SECONDS } from '../services/poller';
@@ -18,6 +19,7 @@ import { useTheme } from '../contexts/ThemeContext';
 
 export default function DashboardScreen() {
   const { colors } = useTheme();
+  const insets = useSafeAreaInsets();
   const [token, setTokenState]               = useState('');
   const [username, setUsernameState]         = useState('');
   const [watchedRepos, setWatchedReposState] = useState<string[]>([]);
@@ -48,7 +50,18 @@ export default function DashboardScreen() {
   const openIssues  = data.repos.reduce((s, r) => s + r.open_issues_count, 0);
 
   return (
-    <SafeAreaView style={[s.screen, { backgroundColor: colors.paper }]}>
+    <View
+      style={[
+        s.screen,
+        {
+          backgroundColor: colors.paper,
+          paddingTop: insets.top + Spacing.screen,
+          paddingBottom: insets.bottom + Spacing.screen,
+          paddingLeft: insets.left + Spacing.screen,
+          paddingRight: insets.right + Spacing.screen,
+        },
+      ]}
+    >
       <TopBar
         username={username || '—'}
         avatarUrl={data.profile?.avatar_url}
@@ -95,14 +108,14 @@ export default function DashboardScreen() {
           }}
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 }
 
 const s = StyleSheet.create({
-  screen: { flex: 1, padding: Spacing.screen },
-  grid:   { flex: 1, flexDirection: 'column', gap: Spacing.gap },
-  row:    { flex: 1, flexDirection: 'row', gap: Spacing.gap },
-  col1:   { flex: 1 },
-  col2:   { flex: 2 },
+  screen: { flex: 1, overflow: 'hidden' },
+  grid:   { flex: 1, flexDirection: 'column', gap: Spacing.gap, minHeight: 0 },
+  row:    { flex: 1, flexDirection: 'row', gap: Spacing.gap, minHeight: 0, minWidth: 0 },
+  col1:   { flex: 1, minWidth: 0, minHeight: 0 },
+  col2:   { flex: 2, minWidth: 0, minHeight: 0 },
 });

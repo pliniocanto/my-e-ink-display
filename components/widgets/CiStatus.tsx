@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import type { CiEntry } from '../../hooks/useGitHubData';
 import type { CiRunStatus } from '../../types/github';
-import { FontFamily, Spacing } from '../../constants/theme';
+import { FontFamily, Spacing, widgetCard } from '../../constants/theme';
 import { useTheme } from '../../contexts/ThemeContext';
 
 interface Props {
@@ -20,7 +20,7 @@ export function CiStatus({ ciEntries, style }: Props) {
   };
 
   return (
-    <View style={[s.card, { borderColor: colors.gray2, backgroundColor: colors.card }, style]}>
+    <View style={[s.card, widgetCard, { borderColor: colors.gray2, backgroundColor: colors.card }, style]}>
       <Text style={[s.label, { color: colors.gray1 }]}>CI / CD</Text>
       {ciEntries.map(({ repo, status }) => {
         const repoName = repo.split('/')[1] ?? repo;

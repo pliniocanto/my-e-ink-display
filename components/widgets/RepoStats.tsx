@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import type { GithubUser } from '../../types/github';
-import { FontFamily, Spacing } from '../../constants/theme';
+import { FontFamily, Spacing, widgetCard } from '../../constants/theme';
 import { useTheme } from '../../contexts/ThemeContext';
 
 interface Props {
@@ -33,7 +33,7 @@ export function RepoStats({ profile, totalStars, totalForks, openIssues, style }
   const router = useRouter();
 
   return (
-    <View style={[s.card, { borderColor: colors.gray2, backgroundColor: colors.card }, style]}>
+    <View style={[s.card, widgetCard, { borderColor: colors.gray2, backgroundColor: colors.card }, style]}>
       <Text style={[s.label, { color: colors.gray1 }]}>REPO STATS</Text>
       <View style={s.grid}>
         <Counter value={profile?.public_repos ?? 0} label="REPOS"   colors={colors} onPress={() => router.push('/repos')} />

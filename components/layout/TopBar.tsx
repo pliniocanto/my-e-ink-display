@@ -32,7 +32,7 @@ export function TopBar({ username, avatarUrl, lastUpdated, onRefresh, onSettings
         </Pressable>
       </View>
       <View style={s.right}>
-        <Text style={[s.meta, { color: colors.gray1 }]}>@{username}  |  updated {updated}</Text>
+        <Text style={[s.meta, { color: colors.gray1 }]} numberOfLines={1}>@{username}  |  updated {updated}</Text>
         <Pressable onPress={onRefresh} style={s.refreshBtn}>
           <Text style={[s.refreshText, { color: colors.ink }]}>↻</Text>
         </Pressable>
@@ -45,12 +45,12 @@ export function TopBar({ username, avatarUrl, lastUpdated, onRefresh, onSettings
 }
 
 const s = StyleSheet.create({
-  container:    { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 2, paddingBottom: 8, marginBottom: 12 },
-  left:         { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  container:    { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 2, paddingBottom: 8, marginBottom: 12, minWidth: 0 },
+  left:         { flexDirection: 'row', alignItems: 'center', gap: 10, flexShrink: 1, minWidth: 0 },
   avatarWrapper: { borderWidth: 1, borderRadius: 4, overflow: 'hidden', width: 36, height: 36 },
   avatar:       { width: 36, height: 36 },
   title:        { fontFamily: FontFamily, fontSize: 18, fontWeight: 'bold', letterSpacing: 2 },
-  right:        { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  right:        { flexDirection: 'row', alignItems: 'center', gap: 12, flexShrink: 0 },
   meta:         { fontFamily: FontFamily, fontSize: 11 },
   refreshBtn:   { padding: 4 },
   refreshText:  { fontFamily: FontFamily, fontSize: 16 },

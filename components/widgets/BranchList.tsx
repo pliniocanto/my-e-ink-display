@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { BranchEntry } from '../../hooks/useGitHubData';
-import { FontFamily, Spacing } from '../../constants/theme';
+import { FontFamily, Spacing, widgetCard } from '../../constants/theme';
 import { useTheme } from '../../contexts/ThemeContext';
 
 interface Props {
@@ -13,9 +13,9 @@ export function BranchList({ branchEntries, style }: Props) {
   const total = branchEntries.reduce((n, e) => n + e.branches.length, 0);
 
   return (
-    <View style={[s.card, { borderColor: colors.gray2, backgroundColor: colors.card }, style]}>
+    <View style={[s.card, widgetCard, { borderColor: colors.gray2, backgroundColor: colors.card }, style]}>
       <Text style={[s.label, { color: colors.gray1 }]}>BRANCHES{total > 0 ? ` · ${total}` : ''}</Text>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView style={s.list} showsVerticalScrollIndicator={false}>
         {branchEntries.map(({ repo, branches }) => {
           if (branches.length === 0) return null;
           const repoName = repo.split('/')[1] ?? repo;
@@ -39,6 +39,7 @@ export function BranchList({ branchEntries, style }: Props) {
 
 const s = StyleSheet.create({
   card:       { flex: 1, borderWidth: 1, padding: Spacing.inner },
+  list:       { flex: 1 },
   label:      { fontFamily: FontFamily, fontSize: 11, letterSpacing: 1, marginBottom: 6 },
   repoBlock:  { marginBottom: 8 },
   repoName:   { fontFamily: FontFamily, fontSize: 11, letterSpacing: 1, marginBottom: 2, borderBottomWidth: 1, paddingBottom: 2 },
